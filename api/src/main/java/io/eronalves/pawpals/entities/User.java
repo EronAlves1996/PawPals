@@ -1,5 +1,8 @@
 package io.eronalves.pawpals.entities;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,5 +37,11 @@ public class User {
     private boolean isLookingForAnimal;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "color", column = @Column(name = "animal_color")),
+            @AttributeOverride(name = "isAdult", column = @Column(name = "animal_is_adult")),
+            @AttributeOverride(name = "size", column = @Column(name = "animal_size")),
+            @AttributeOverride(name = "type", column = @Column(name = "animal_type"))
+    })
     private AnimalPreferences preferences;
 }
