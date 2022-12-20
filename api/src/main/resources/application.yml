@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/pawpals
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    database: mysql
+server:
+  servlet:
+    context-path: /pawpals
