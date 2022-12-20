@@ -26,8 +26,9 @@ public class Animal {
     @Size(max = 30)
     private String name;
 
-    @Size(max = 15)
-    private String color;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AnimalColor color;
 
     @NotNull
     private boolean isAdult;

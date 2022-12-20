@@ -1,9 +1,6 @@
 package io.eronalves.pawpals;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -21,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.eronalves.pawpals.entities.AnimalColor;
 import io.eronalves.pawpals.entities.AnimalPreferences;
 import io.eronalves.pawpals.entities.AnimalSize;
 import io.eronalves.pawpals.entities.AnimalType;
@@ -56,7 +54,8 @@ class UserControllerTest {
 
 	@Test
 	public void restUpdateAdoptionPreferences() throws JsonProcessingException, Exception {
-		AnimalPreferences preferences = new AnimalPreferences("black", false, AnimalSize.SMALL, AnimalType.DOG);
+		AnimalPreferences preferences = new AnimalPreferences(AnimalColor.BLACK, false, AnimalSize.SMALL,
+				AnimalType.DOG);
 		User user = new User(1, "Eron", "eron@eron.com", true,
 				preferences);
 		when(userRepository.findById(1))

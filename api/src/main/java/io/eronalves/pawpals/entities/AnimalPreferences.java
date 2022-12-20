@@ -4,7 +4,6 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class AnimalPreferences {
 
     @NotNull
-    @Size(max = 15)
-    private String color;
+    @Enumerated(EnumType.STRING)
+    private AnimalColor color;
 
     @NotNull
     private boolean isAdult;
