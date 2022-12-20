@@ -8,16 +8,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.eronalves.pawpals.controllers.UserController;
 import io.eronalves.pawpals.entities.AnimalColor;
 import io.eronalves.pawpals.entities.AnimalPreferences;
 import io.eronalves.pawpals.entities.AnimalSize;
@@ -25,7 +28,7 @@ import io.eronalves.pawpals.entities.AnimalType;
 import io.eronalves.pawpals.entities.User;
 import io.eronalves.pawpals.repositories.UserRepository;
 
-@WebMvcTest
+@WebMvcTest(value = UserController.class)
 class UserControllerTest {
 
 	@Autowired
