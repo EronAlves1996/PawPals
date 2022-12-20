@@ -50,4 +50,4 @@ Basically, the flow are following:
 
 If you know or want to give some pet to adoption, run a POST call into http://localhost:8080/pawpals/animals/register.
 
-You can test the application right now in the
+You can test the application right now in the http://152.67.46.241:8080/pawpals/ and see all the documentation definiton on http://152.67.46.241:8080/pawpals/swagger-ui.html
