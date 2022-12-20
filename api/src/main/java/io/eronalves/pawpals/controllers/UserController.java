@@ -17,6 +17,12 @@ import io.eronalves.pawpals.entities.Animal;
 import io.eronalves.pawpals.entities.AnimalPreferences;
 import io.eronalves.pawpals.entities.User;
 import io.eronalves.pawpals.repositories.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/users")
@@ -28,21 +34,34 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
+    @Operation(description = "Register a new user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "New User Registered", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)))
+    })
     @PostMapping("/register")
     public User registerUser(@RequestBody User user) {
         return userRepository.save(user);
     }
 
+    @Operation(description = "Register adoption interests")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Adoption Interests registered", content = @Content(mediaType = "applicationjson", schema = @Schema(implementation = User.class)))
+    })
     @PostMapping("/{id}/adoption")
-    public User appointInterestToAdoption(@PathVariable("id") int id, @RequestBody AnimalPreferences preferences) {
+    public User appointInterestToAdoption(@Parameter(description = "The id of the user") @PathVariable("id") int id,
+            @RequestBody AnimalPreferences preferences) {
         userRepository.updateAdoptionPreference(preferences.getColor(), preferences.isAdult(),
                 preferences.getSize(), preferences.getType(), id);
 
         return userRepository.findById(id).get();
     }
 
+    @Operation(description = "Unregister adoption interests")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Adoption interests unregistered", content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class)))
+    })
     @PutMapping("/no-adopt/{id}")
-    public User retireInterestToAdopt(@PathVariable("id") int id) {
+    public User retireInterestToAdopt(@Parameter(description = "The id of the user") @PathVariable("id") int id) {
         Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isPresent()) {
             User user = userOpt.get();
@@ -53,8 +72,12 @@ public class UserController {
         throw new ErrorResponseException(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(description = "Get a list of animals that match (even partially) the interests of user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "A list of animals that match the interests of user", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Animal[].class)))
+    })
     @GetMapping("/matches/{id}")
-    public List<Animal> findMatches(@PathVariable("id") int id) {
+    public List<Animal> findMatches(@Parameter(description = "The id of the user") @PathVariable("id") int id) {
         Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isPresent()) {
             if (!userOpt.get().isLookingForAnimal())
