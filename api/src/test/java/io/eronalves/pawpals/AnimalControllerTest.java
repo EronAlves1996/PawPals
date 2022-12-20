@@ -2,6 +2,7 @@ package io.eronalves.pawpals;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -67,6 +68,12 @@ public class AnimalControllerTest {
 		mockMvc.perform(get("/animals/all"))
 				.andExpect(status().isOk())
 				.andExpect(content().json(om.writeValueAsString(animalList)));
+	}
+
+	@Test
+	public void testAdoptAnimal() throws Exception {
+		mockMvc.perform(delete("/animals/adopt/1"))
+				.andExpect(status().isOk());
 	}
 
 }
