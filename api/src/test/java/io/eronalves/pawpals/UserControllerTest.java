@@ -3,19 +3,18 @@ package io.eronalves.pawpals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,7 +56,7 @@ class UserControllerTest {
 	}
 
 	@Test
-	public void restUpdateAdoptionPreferences() throws JsonProcessingException, Exception {
+	public void testUpdateAdoptionPreferences() throws JsonProcessingException, Exception {
 		AnimalPreferences preferences = new AnimalPreferences(AnimalColor.BLACK, false, AnimalSize.SMALL,
 				AnimalType.DOG);
 		User user = new User(1, "Eron", "eron@eron.com", true,
@@ -69,6 +68,23 @@ class UserControllerTest {
 				.perform(post("/users/1/adoption")
 						.content(om.writeValueAsString(preferences))
 						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().json(om.writeValueAsString(user)));
+	}
+
+	@Test
+	public void testRetireAdoptionInterest() throws JsonProcessingException, Exception {
+		AnimalPreferences preferences = new AnimalPreferences(AnimalColor.BLACK, false, AnimalSize.SMALL,
+				AnimalType.DOG);
+		User userWithPreferences = new User(1, "Eron", "eron@eron.com", true,
+				preferences);
+
+		User user = new User(1, "Eron", "eron@eron.com", false,
+				null);
+		when(userRepository.findById(1)).thenReturn(Optional.of(userWithPreferences));
+		when(userRepository.save(any())).thenReturn(user);
+
+		mockMvc.perform(put("/users/no-adopt/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().json(om.writeValueAsString(user)));
 	}
