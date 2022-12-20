@@ -5,12 +5,14 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class AnimalPreferences {
 
     @NotNull
