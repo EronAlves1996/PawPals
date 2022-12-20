@@ -1,12 +1,16 @@
 package io.eronalves.pawpals;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -20,6 +24,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.eronalves.pawpals.controllers.UserController;
+import io.eronalves.pawpals.entities.Animal;
 import io.eronalves.pawpals.entities.AnimalColor;
 import io.eronalves.pawpals.entities.AnimalPreferences;
 import io.eronalves.pawpals.entities.AnimalSize;
@@ -87,6 +92,24 @@ class UserControllerTest {
 		mockMvc.perform(put("/users/no-adopt/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().json(om.writeValueAsString(user)));
+	}
+
+	@Test
+	public void testFindMatches() throws JsonProcessingException, Exception {
+		AnimalPreferences preferences = new AnimalPreferences(AnimalColor.BLACK, false, AnimalSize.SMALL,
+				AnimalType.DOG);
+		User userWithPreferences = new User(1, "Eron", "eron@eron.com", true,
+				preferences);
+		List<Animal> animalsList = Arrays.asList(
+				new Animal(1, "Dondoca", AnimalColor.MIXED, true, AnimalSize.SMALL, AnimalType.DOG),
+				new Animal(2, "Charmander", AnimalColor.BLACK, false, AnimalSize.MEDIUM, AnimalType.CAT));
+
+		when(userRepository.findById(1)).thenReturn(Optional.of(userWithPreferences));
+		when(userRepository.findMatches(any(), any(), anyBoolean(), any())).thenReturn(animalsList);
+
+		mockMvc.perform(get("/users/matches/1"))
+				.andExpect(status().isOk())
+				.andExpect(content().json(om.writeValueAsString(animalsList)));
 	}
 
 }
