@@ -1,9 +1,11 @@
 package io.eronalves.pawpals.controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.ErrorResponseException;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.eronalves.pawpals.entities.Animal;
 import io.eronalves.pawpals.entities.AnimalPreferences;
 import io.eronalves.pawpals.entities.User;
 import io.eronalves.pawpals.repositories.UserRepository;
@@ -46,6 +49,19 @@ public class UserController {
             user.setPreferences(null);
             user.setLookingForAnimal(false);
             return userRepository.save(user);
+        }
+        throw new ErrorResponseException(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/matches/{id}")
+    public List<Animal> findMatches(@PathVariable("id") int id) {
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isPresent()) {
+            if (!userOpt.get().isLookingForAnimal())
+                throw new ErrorResponseException(HttpStatus.NOT_ACCEPTABLE);
+            AnimalPreferences preferences = userOpt.get().getPreferences();
+            return userRepository.findMatches(preferences.getColor(), preferences.getSize(), preferences.isAdult(),
+                    preferences.getType());
         }
         throw new ErrorResponseException(HttpStatus.NOT_FOUND);
     }
