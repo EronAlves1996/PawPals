@@ -34,6 +34,8 @@ class UserControllerTest {
 	@MockBean
 	UserRepository userRepository;
 
+	private ObjectMapper om = new ObjectMapper();
+
 	@Test
 	void contextLoads() {
 	}
@@ -43,7 +45,6 @@ class UserControllerTest {
 		User user = new User(1, "Eron", "eron@eron.com", false, null);
 		when(userRepository.save(any())).thenReturn(user);
 
-		ObjectMapper om = new ObjectMapper();
 		mockMvc
 				.perform(post("/users/register")
 						.content(om.writeValueAsString(new User(null, "Eron", "eron@eron.com", false, null)))
@@ -60,8 +61,6 @@ class UserControllerTest {
 				preferences);
 		when(userRepository.findById(1))
 				.thenReturn(Optional.of(user));
-
-		ObjectMapper om = new ObjectMapper();
 
 		mockMvc
 				.perform(post("/users/1/adoption")
