@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/adoption")
-    public User appointInterestToAdoption(@PathVariable("id") int id, AnimalPreferences preferences) {
+    public User appointInterestToAdoption(@PathVariable("id") int id, @RequestBody AnimalPreferences preferences) {
         userRepository.updateAdoptionPreference(preferences.getColor(), preferences.isAdult(),
                 preferences.getSize(), preferences.getType(), id);
 
